@@ -17,12 +17,13 @@ exports.generateCareerTimeline = async (req, res) => {
       return res.status(400).json({ error: 'current_skills, target_job, and timeframe_months are required' });
     }
 
-    // Prepare arguments for Python script
+    // Prepare arguments for Python script (mode = "ai")
     const args = [
       JSON.stringify(current_skills),
       target_job,
       timeframe_months.toString(),
-      additional_context ? JSON.stringify(additional_context) : '{}'
+      additional_context ? JSON.stringify(additional_context) : '{}',
+      'ai'  // mode: "ai" for Gemini-based timeline
     ];
 
     console.log('timelineController: Spawning Python process with args:', args);
@@ -35,18 +36,28 @@ exports.generateCareerTimeline = async (req, res) => {
       console.log('timelineController: Python stdout:', chunk.toString());
     });
     py.stderr.on('data', (chunk) => {
-      error += chunk.toString();
-      console.log('timelineController: Python stderr:', chunk.toString());
+      // Log stderr output but don't treat it as a fatal error
+      // This allows us to separate logging from JSON data (to stdout)
+      console.log(`gemini_timeline.py log: ${chunk.toString().trim()}`);
+      
+      // Only add to error if it's an actual error, not just a gRPC warning
+      if (chunk.toString().toLowerCase().includes('error:') || chunk.toString().toLowerCase().includes('exception:')) {
+        error += chunk.toString();
+      }
     });
     py.on('close', (code) => {
       console.log('timelineController: Python process closed with code:', code, 'error:', error, 'data length:', data.length);
-      if (code !== 0 || error) {
+      
+      // Check for gRPC timeout error and ignore it if data was successfully returned
+      const isGrpcTimeoutError = error.includes('grpc_wait_for_shutdown_with_timeout() timed out');
+      
+      if ((code !== 0 || error) && !(isGrpcTimeoutError && data)) {
         console.error('timelineController: Error detected - code:', code, 'error:', error);
         return res.status(500).json({ error: error || 'Failed to generate timeline' });
       }
       try {
         const result = JSON.parse(data);
-        console.log('timelineController: Successfully parsed result:', result);
+        console.log('timelineController: Successfully parsed result');
         // Always include the mermaid_chart in the response if present
         res.json(result);
       } catch (e) {

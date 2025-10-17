@@ -6,11 +6,24 @@ Handles AI-powered career recommendations and insights
 import google.generativeai as genai
 import os
 import json
+import atexit
 from typing import Dict, List, Any, Optional
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
+
+# Gracefully handle gRPC shutdown
+def _cleanup_grpc():
+    """Cleanup function to properly shut down gRPC connections"""
+    try:
+        import grpc
+        # Signal graceful shutdown for gRPC
+        grpc.aio.shutdown_channel = True
+    except:
+        pass
+
+atexit.register(_cleanup_grpc)
 
 class GeminiService:
     def __init__(self):

@@ -27,6 +27,7 @@ connectDB();
 const resumeRoutes = require('./routes/resumeRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const timelineRoutes = require('./routes/timelineRoutes');
+const youtubeRoutes = require('./routes/youtubeRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 
@@ -79,6 +80,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/timeline', timelineRoutes);
+app.use('/api/youtube', youtubeRoutes);
 
 // Add the skills routes
 const skillsRoutes = require('./routes/skillsRoutes');

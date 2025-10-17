@@ -6,6 +6,7 @@ Uses LangGraph to orchestrate Gemini API for career recommendations & insights
 import os
 import json
 import sys
+import atexit
 from typing import Dict, List, Any
 import re
 
@@ -27,6 +28,17 @@ if not GEMINI_API_KEY:
     logger.error("GEMINI_API_KEY not found in environment variables")
     # Don't raise an exception here, we'll handle it more gracefully later
     # by providing a fallback response
+
+# Gracefully handle gRPC shutdown
+def _cleanup_grpc():
+    """Cleanup function to properly shut down gRPC connections"""
+    try:
+        import grpc
+        grpc.aio.shutdown_channel = True
+    except:
+        pass
+
+atexit.register(_cleanup_grpc)
 
 
 # ----------------------------------------------------

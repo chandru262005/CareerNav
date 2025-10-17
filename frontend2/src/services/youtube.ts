@@ -4,22 +4,15 @@ export interface YouTubeVideo {
   title: string;
   url: string;
   channel: string;
-  views: string;
-  duration: string;
-}
-
-export interface TimelinePhase {
-  phase: string;
-  skills: string[];
-  resources: string[];
+  views?: string;
+  duration?: string;
 }
 
 export interface YouTubeRecommendationsResponse {
   title: string;
   summary: string;
   youtube_resources: YouTubeVideo[];
-  timeline: TimelinePhase[];
-  advice: string;
+  tips: string[];
 }
 
 export interface YouTubeRecommendationsRequest {
@@ -32,9 +25,15 @@ export interface YouTubeRecommendationsRequest {
 export const getYouTubeRecommendations = async (
   payload: YouTubeRecommendationsRequest
 ): Promise<YouTubeRecommendationsResponse> => {
-  const { data } = await apiClient.post<YouTubeRecommendationsResponse>(
-    "/timeline",
-    payload
-  );
-  return data;
+  try {
+    const { data } = await apiClient.post<YouTubeRecommendationsResponse>(
+      "/youtube/recommendations",
+      payload
+    );
+    
+    return data;
+  } catch (error) {
+    console.error('Error fetching YouTube recommendations:', error);
+    throw error;
+  }
 };

@@ -2,6 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AppProviders } from "./providers/AppProviders.tsx";
 import { AppLayout } from "../components/layout/AppLayout.tsx";
 import { AuthLayout } from "../components/layout/AuthLayout.tsx";
+import { ErrorBoundary } from "../components/ErrorBoundary.tsx";
 import { useAuth } from "../hooks/useAuth.ts";
 import { DashboardPage } from "../pages/Dashboard.tsx";
 import { ResumeUploadPage } from "../pages/ResumeUpload.tsx";
@@ -64,11 +65,13 @@ const AppRouter = () => (
 );
 
 export const App = () => (
-  <AppProviders>
-    <BrowserRouter>
-      <AppRouter />
-    </BrowserRouter>
-  </AppProviders>
+  <ErrorBoundary>
+    <AppProviders>
+      <BrowserRouter>
+        <AppRouter />
+      </BrowserRouter>
+    </AppProviders>
+  </ErrorBoundary>
 );
 
 export default App;
