@@ -1,0 +1,47 @@
+services:
+  node-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3011:3011"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  python-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.python
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  admin-frontend:
+    build: ./admin-frontend
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+
+  user-frontend:
+    build: ./frontend2
+    ports:
+      - "5174:5173"
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongo-data:

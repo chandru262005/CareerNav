@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAdminAuth } from '../context/AdminAuthContext'
 import { adminAuthService } from '../services/admin'
 import { Button } from '../components/shared/Button'
@@ -150,22 +150,7 @@ export const AdminLogin: React.FC = () => {
           <Button type="submit" className="w-full" disabled={isLoading}>
             {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
-
-          {/* Forgot Password Link */}
-          <div className="text-center">
-            <Link to="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-              Forgot your password?
-            </Link>
-          </div>
         </form>
-
-        {/* Sign Up Link */}
-        <p className="text-center text-slate-600 text-sm mt-6">
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-blue-600 hover:text-blue-700 font-semibold">
-            Sign up as admin
-          </Link>
-        </p>
       </div>
     </div>
   )

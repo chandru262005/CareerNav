@@ -69,7 +69,7 @@ exports.registerAdmin = async (req, res) => {
 
     // Send verification email
     try {
-      const frontendUrl = process.env.FRONTEND_URL_ADMIN || process.env.FRONTEND_URL || 'http://localhost:5174';
+      const frontendUrl = process.env.FRONTEND_URL_ADMIN || process.env.FRONTEND_URL || 'http://localhost:5173';
       const verificationUrl = `${frontendUrl}/verify-email?token=${verificationToken}&email=${encodeURIComponent(admin.email)}`;
       await sendVerificationEmail(admin.email, verificationToken, verificationUrl);
     } catch (emailError) {
@@ -291,7 +291,7 @@ exports.resendVerificationEmail = async (req, res) => {
 
     // Send verification email
     try {
-      const frontendUrl = process.env.FRONTEND_URL_ADMIN || process.env.FRONTEND_URL || 'http://localhost:5174';
+      const frontendUrl = process.env.FRONTEND_URL_ADMIN || process.env.FRONTEND_URL || 'http://localhost:5173';
       const verificationUrl = `${frontendUrl}/verify-email?token=${verificationToken}&email=${encodeURIComponent(admin.email)}`;
       await sendVerificationEmail(admin.email, verificationToken, verificationUrl);
     } catch (emailError) {
@@ -488,7 +488,7 @@ exports.forgotAdminPassword = async (req, res) => {
 
     // Send reset email
     try {
-      const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5174'}/reset-password?token=${resetToken}`;
+      const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}`;
       const { sendPasswordResetEmail } = require('../utils/emailService');
       await sendPasswordResetEmail(email, resetToken, resetUrl);
       console.log(`Password reset email sent to ${email}`);

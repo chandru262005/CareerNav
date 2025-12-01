@@ -11,7 +11,7 @@ import { Spinner } from "../components/shared/Spinner.tsx";
 import { Eye, EyeOff } from "lucide-react";
 
 export const LoginPage = () => {
-  const [email, setEmail] = useState("23n212@psgtech.ac.in");
+  const [email, setEmail] = useState("suryaprakashb265@gmail.com");
   const [password, setPassword] = useState("11111111");
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
